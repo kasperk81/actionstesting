@@ -1,0 +1,28 @@
+name: optional flow
+
+on:
+  pull_request:
+    branches: [ 'master' ]
+  push:
+    branches: [ 'master' ]
+    tags: [ '*' ]
+  workflow_dispatch:
+    inputs:
+      randomShouldRunFlag:
+        description: A random input argument indicating whether or not to run the step
+        required: true
+        default: nope
+
+jobs:
+  some-job-that-always-runs:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: step 1
+        run: echo "hi from some-job-that-always-runs!!"
+
+  conditional-job-that-i-can-control:
+    runs-on: ubuntu-20.04
+    if: ${{ github.event.inputs.randomShouldRunFlag == 'yes' }}
+    steps:
+      - name: step 1
+        run: echo "hi from conditional-job-that-i-can-control!"
